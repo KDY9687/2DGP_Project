@@ -12,6 +12,7 @@ import main_state
 from Kirby import kirby
 from Floor import floor
 from Background import background
+from WaddleDee import waddledee
 
 
 Kirby = None
@@ -24,7 +25,7 @@ menu = None
 
 def enter():
     global menu
-    menu = load_image('Stage1_BG.png')
+    menu = load_image('start_window.png')
     hide_cursor()
     hide_lattice()
 
@@ -60,6 +61,13 @@ def create_new_world():
 
     Background = background()
     game_world.add_object(Background, 0)
+
+    with open('waddledee_data.json', 'r') as f:
+        waddledee_data_list = json.load(f)
+
+    for data in waddledee_data_list:
+        WaddleDee = waddledee(data['x'], data['y'])
+        game_world.add_object(WaddleDee, 1)
 
 
 def load_saved_world():

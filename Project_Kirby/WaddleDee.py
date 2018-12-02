@@ -6,7 +6,7 @@ from pico2d import *
 import world_build_state
 
 
-PIXEL_PER_METER = (10.0 / 0.3)
+PIXEL_PER_METER = (10.0 / 3)
 RUN_SPEED_KMPH = 20.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -18,21 +18,20 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 3
 
 
-animation_names = ['Attack', 'Dead', 'Idle', 'Walk']
+animation_names = ['Idle', 'Walk']
 
 
-class WaddleDee:
+class waddledee:
     images = None
-    font = None
 
     def load_images(self):
-        if WaddleDee.images == None:
-            WaddleDee.images = {}
+        if waddledee.images == None:
+            waddledee.images = {}
             for name in animation_names:
-                WaddleDee.images[name] = [load_image("./resource/Enemy/Waddle"+ name + " (%d)" % i + ".png") for i in range(1, 4)]
+                waddledee.images[name] = [load_image("./resource/Enemy/Waddle/"+ name + " (%d)" % i + ".png") for i in range(1, 4)]
 
     def __init__(self, x=0, y=0):
-        self.x, self.y = x * PIXEL_PER_METER, y * PIXEL_PER_METER
+        self.x, self.y = x, y
         self.load_images()
         self.dir = random.random()*2*math.pi
         self.speed = 0
@@ -63,7 +62,7 @@ class WaddleDee:
     def find_player(self):
         kirby = world_build_state.get_kirby()
         distance = (kirby.x - self.x)**2 + (kirby.y - self.y)**2
-        if distance < (PIXEL_PER_METER * 10)**2:
+        if distance < (PIXEL_PER_METER * 5)**2:
             self.dir = math.atan2(kirby.y - self.y, kirby.x - self.x)
             return BehaviorTree.SUCCESS
         else:
@@ -86,27 +85,29 @@ class WaddleDee:
 
 
     def get_bb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 12, self.y - 12, self.x + 12, self.y + 12
 
     def update(self):
         self.bt.run()
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
         self.x += self.speed * math.cos(self.dir)* game_framework.frame_time
-        self.y += self.speed * math.sin(self.dir)* game_framework.frame_time
+        #self.y += self.speed * math.sin(self.dir)* game_framework.frame_time
         self.x = clamp(50, self.x, get_canvas_width() - 50)
-        self.y = clamp(50, self.y, get_canvas_height() - 50)
+        self.y = clamp(61, self.y, get_canvas_height() - 50)
 
     def draw(self):
         if math.cos(self.dir) < 0:
             if self.speed == 0:
-                WaddleDee.images['Idle'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 27, 31)
+                waddledee.images['Idle'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 25, 30)
             else:
-                WaddleDee.images['Walk'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 27, 31)
+                waddledee.images['Walk'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 25, 30)
         else:
             if self.speed == 0:
-                WaddleDee.images['Idle'][int(self.frame)].draw(self.x, self.y, 27, 31)
+                waddledee.images['Idle'][int(self.frame)].draw(self.x, self.y, 27, 31)
             else:
-                WaddleDee.images['Walk'][int(self.frame)].draw(self.x, self.y, 27, 31)
+                waddledee.images['Walk'][int(self.frame)].draw(self.x, self.y, 27, 31)
+
+
 
 
     def handle_event(self, event):
