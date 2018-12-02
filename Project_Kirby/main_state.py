@@ -6,24 +6,28 @@ from pico2d import *
 import game_framework
 import game_world
 
-from Kirby import kirby
-from background import Background
-from Floor import floor
+#from Kirby import kirby
+#from background import Background
+#from Floor import floor
 
+import world_build_state
 
 name = "MainState"
 
 Kirby = None
 Floor = None
+Background = None
 
 def enter():
     global Kirby
-    Kirby = kirby()
-    background = Background()
-    Floor = floor()
-    game_world.add_object(background, 0)
-    game_world.add_object(Floor, 1)
-    game_world.add_object(Kirby, 1)
+    global Floor
+    global Background
+
+    Background = world_build_state.get_background()
+
+    Floor = world_build_state.get_floor()
+
+    Kirby = world_build_state.get_kirby()
 
 def collide(a, b):
     left_a, bottom_a, right_a, top_a = a.get_bb()
@@ -52,7 +56,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-                game_framework.quit()
+            game_framework.change_state(world_build_state)
         else:
             Kirby.handle_event(event)
 

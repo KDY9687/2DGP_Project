@@ -11,12 +11,12 @@ import main_state
 
 from Kirby import kirby
 from Floor import floor
-from background import Background
+from Background import background
 
 
 Kirby = None
 Floor = None
-background = None
+Background = None
 
 name = "WorldBuildState"
 
@@ -24,11 +24,12 @@ menu = None
 
 def enter():
     global menu
-    menu = load_image('Stage_Floor.png')
+    menu = load_image('Stage1_BG.png')
     hide_cursor()
     hide_lattice()
 
 def exit():
+    global menu
     pass
 
 def pause():
@@ -44,20 +45,21 @@ def get_floor():
     return Floor
 
 def get_background():
-    return background
+    return Background
 
 def create_new_world():
     global Kirby
     global Floor
-    global background
+    global Background
+
+    Floor = floor()
+    game_world.add_object(Floor, 1)
+
     Kirby = kirby()
     game_world.add_object(Kirby, 1)
 
-    background = Background()
+    Background = background()
     game_world.add_object(Background, 0)
-
-    Floor = floor()
-    game_world.add_object(floor, 0)
 
 
 def load_saved_world():
