@@ -1,8 +1,8 @@
 from pico2d import *
 
-class Floor:
+class floor:
     def __init__(self):
-        self.image = load_image('Stage1_Floor.png')
+        self.image = load_image('stage1_floor.png')
 
     def update(self):
         pass

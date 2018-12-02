@@ -184,6 +184,9 @@ class kirby:
     def add_event(self, event):
         self.event_que.insert(0, event)
 
+    def get_bb(self):
+        return self.x -10, self.y - 10, self.x + 10, self.y + 10
+
     def update(self):
         self.cur_state.do(self)
         if len(self.event_que) > 0:
@@ -194,6 +197,7 @@ class kirby:
 
     def draw(self):
         self.cur_state.draw(self)
+        draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:

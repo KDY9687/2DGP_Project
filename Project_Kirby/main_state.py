@@ -8,24 +8,33 @@ import game_world
 
 from Kirby import kirby
 from background import Background
-from Floor import Floor
+from Floor import floor
 
 
 name = "MainState"
 
 Kirby = None
+Floor = None
 
 def enter():
     global Kirby
     Kirby = kirby()
     background = Background()
-    floor = Floor()
-    #Floor = floor()
+    Floor = floor()
     game_world.add_object(background, 0)
-    game_world.add_object(floor, 1)
-    game_world.add_object(Kirby, 2)
+    game_world.add_object(Floor, 1)
+    game_world.add_object(Kirby, 1)
 
+def collide(a, b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
 
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True
 def exit():
     game_world.clear()
 
